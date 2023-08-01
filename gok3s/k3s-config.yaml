@@ -1,0 +1,16 @@
+envs:
+  INSTALL_K3S_SKIP_DOWNLOAD: true
+  INSTALL_K3S_SYMLINK: ""
+  INSTALL_K3S_SKIP_ENABLE: true
+  INSTALL_K3S_SKIP_START: true
+  INSTALL_K3S_VERSION: "1.26"
+  INSTALL_K3S_BIN_DIR: "/usr/local/bin"
+  INSTALL_K3S_BIN_DIR_READ_ONLY: false
+  INSTALL_K3S_SYSTEMD_DIR: "/etc/systemd/system"
+  INSTALL_K3S_EXEC: "server" # server or agent
+  INSTALL_K3S_NAME: "k3s"
+  INSTALL_K3S_TYPE: ""
+  INSTALL_K3S_SELINUX_WARN: ""
+  INSTALL_K3S_SKIP_SELINUX_RPM: false
+  INSTALL_K3S_CHANNEL_URL: "https://update.k3s.io/v1-release/channels"
+  INSTALL_K3S_CHANNEL: "stable" # stable, latest, testing.
