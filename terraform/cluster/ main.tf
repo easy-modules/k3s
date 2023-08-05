@@ -7,6 +7,49 @@ locals {
   }
 }
 #===============================================================================
+# AWS EC2 KEY PAIR
+#===============================================================================
+resource "null_resource" "create_keys" {
+  provisioner "local-exec" {
+    command = "devopstation create keys"
+  }
+}
+resource "aws_ssm_parameter" "private_key" {
+  depends_on = [null_resource.create_keys]
+  name = "/K3S/${upper(var.environment)}PRIVATE_KEY"
+  description = "Private key for K3S"
+  type = "string"
+  value = file("${path.module}/private_key")
+}
+resource "aws_ssm_parameter" "public_key" {
+  depends_on = [null_resource.create_keys]
+  name = "/K3S/${upper(var.environment)}PUBLIC_KEY"
+  description = "Public key for K3S"
+  type = "string"
+  value = file("${path.module}/public_key")
+}
+resource "null_resource" "remove_keys" {
+  triggers = {
+    private_key = aws_ssm_parameter.private_key.value
+    public_key = aws_ssm_parameter.public_key.value
+  }
+
+  provisioner "local-exec" {
+    command = "devopstation remove keys"
+  }
+}
+resource "aws_key_pair" "my_ssh_public_key" {
+  key_name   = "${var.common_prefix}-ssh-pubkey-${var.environment}"
+  public_key = aws_ssm_parameter.public_key.value
+
+  tags = merge(
+    local.default_tags,
+    {
+      Name = lower("${var.common_prefix}-ssh-pubkey-${var.environment}")
+    }
+  )
+}
+#===============================================================================
 # AWS EC2 EBS
 #===============================================================================
 resource "aws_ebs_volume" "ebs" {
@@ -17,20 +60,6 @@ resource "aws_ebs_volume" "ebs" {
   tags              = merge(
     local.default_tags,
     { Name = format("%s-ebs-%s", var.common_prefix, var.environment) }
-  )
-}
-#===============================================================================
-# AWS EC2 KEY PAIR
-#===============================================================================
-resource "aws_key_pair" "my_ssh_public_key" {
-  key_name   = "${var.common_prefix}-ssh-pubkey-${var.environment}"
-  public_key = file(var.path_to_public_key)
-
-  tags = merge(
-    local.default_tags,
-    {
-      Name = lower("${var.common_prefix}-ssh-pubkey-${var.environment}")
-    }
   )
 }
 #===============================================================================

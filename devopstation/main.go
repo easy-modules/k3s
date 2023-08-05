@@ -1,11 +1,12 @@
 package main
 
 import (
+	"devopstation/utils"
 	"fmt"
-	"gok3s/utils"
 )
 
 func main() {
 	fn := utils.NewUtils()
-	fmt.Println(fn.DowloadPackages("ls", []string{"-lha"}))
+	events := fn.DeletePPKeys()
+	fmt.Println(events)
 }
