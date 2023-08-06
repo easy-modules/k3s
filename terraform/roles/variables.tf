@@ -1,18 +1,18 @@
 variable "environment" {
-  type = string
+  type        = string
   description = "set up environment"
-  default = "dev"
+  default     = "dev"
 }
 
 variable "common_prefix" {
-  type    = string
+  type        = string
   description = "set commom prefix"
-  default = "k3s"
+  default     = "k3s"
 }
 
 variable "global_tags" {
-  type = map(string)
+  type        = map(string)
   description = "set global tags"
-  default = {}
+  default     = {}
 }
 
