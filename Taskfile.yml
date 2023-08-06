@@ -1,0 +1,52 @@
+version: "3"
+
+vars:
+  TFPLAN: .tfplan
+
+tasks:
+  tf:init:
+    dir: terraform/
+    desc: Init terraform
+    cmds:
+      - terraform fmt ./**
+      - task: clean-terraform
+      - task: init:network
+      - task: init:cluster
+
+  init:network:
+    dir: terraform/network
+    desc: Init network
+    cmds:
+      - terraform init \
+        -backend-config="bucket=tf-state" \
+        -backend-config="encrypt=true" \
+        -backend-config="key=$ENV/network/terraform.tfvars"
+
+  init:cluster:
+    dir: terraform/cluster
+    desc: Init cluster
+    cmds:
+      - terraform init \
+        -backend-config="bucket=tf-state" \
+        -backend-config="encrypt=true" \
+        -backend-config="key=$ENV/cluster/terraform.tfvars"
+
+  tf:plan:
+    dir: terraform/
+    desc: Show terraform resources creation
+    cmds:
+      - terraform plan -out={{.TFPLAN}}
+
+  tf:apply:
+    dir: terraform/
+    desc: Apply resources creation
+    cmds:
+      - terraform apply "{{.TFPLAN}}"
+
+  tf:clean:
+    dir: terraform/
+    desc: Clean the terraform environment (remove terraform directories and files)
+    cmds:
+      - find ./** -type d -name .terraform -exec rm -rf {} +
+      - find ./** -type f -name .terraform.lock.hcl -delete
+

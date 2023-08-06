@@ -1,12 +1,10 @@
+/*
+Copyright © 2023 NAME HERE <EMAIL ADDRESS>
+*/
 package main
 
-import (
-	"devopstation/utils"
-	"fmt"
-)
+import "devopstation/cmd"
 
 func main() {
-	fn := utils.NewUtils()
-	events := fn.DeletePPKeys()
-	fmt.Println(events)
+	cmd.Execute()
 }

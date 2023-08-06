@@ -1,6 +1,3 @@
-#===============================================================================
-# AWS EC2 KEY PAIR
-#===============================================================================
 variable "common_prefix" {
   type        = string
   description = "set commom prefix"
@@ -11,11 +8,9 @@ variable "environment" {
   description = "set up environment"
   default     = "dev"
 }
-variable "global_tags" {
-  type        = map(string)
-  description = "set global tags"
-  default     = {}
-}
+#===============================================================================
+# AWS EC2 KEY PAIR
+#===============================================================================
 variable "path_to_public_key" {
   type        = string
   description = "set path of public key"
